@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title> COMP-2132 - Final Project - Igor Tasic</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, width=device-width">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+    </style>
+    <script src="js/jquery-3.7.1.min.js" defer="defer"></script>
+    <script src="js/wanakana.min.js" defer="defer"></script>
+    <script src="js/script.js" defer="defer"></script>
+
+</head>
+
+<body>
+    <div id="wrapper">
+        <header>
+        </header>
+        <div class="loader"><img src="media/blossom.png" alt=""></div>
+        <main>
+            <div id="explanation">
+                <h1>Welcome!</h1>
+                <p>This is a japanese learning mini-game where you make a little creature move forward with every
+                    correct guess. Every skip you use will cost you one heart. When you reach zero, your creature will
+                    restart here and your score will reset. For every correct guess, you earn some coins that you can
+                    use to give you a hint, but keep in mind you can only have one hint per question. Your high score
+                    and coins will stay in your browser's cache and are shared across game modes.</p>
+
+                <p>You can also use your hard-earned coins to buy some slightly faster creatures if you wish. I will add more in the future and make the selected creature persist in memory as well eventually. For those of you who wish to cheat, the word generated is logged onto the console :).</p>
+                <h3>Choose your mode below!</h3>
+                <div id="buttonWrapper">
+                    <button id="kanjiModeButton" class="gameModeButtons">From Kanji</button>
+                    <button id="kanaModeButton" class="gameModeButtons">From Kana</button>
+                    <button id="meaningModeButton" class="gameModeButtons">From Meaning</button>
+                </div>
+            </div>
+
+            <div id="gameWrapper">
+                <div id="indicatorsWrapper">
+                    <div id="scoresWrapper">
+                        <span>Score:<span id="score"></span></span><br>
+                        <span>High score:<span id="highScore"></span></span>
+                    </div>
+                    <span id="moneyWrapper"><span id="moneyDisplay"></span><img id="money" src="media/money.png"
+                            alt="small coin"></span>
+                </div>
+                <div id="outputWrapper">
+                    <h1 id="kanji"></h1>
+                    <h1 id="kana"></h1>
+                    <h1 id="meaning"></h1>
+                </div>
+
+                <div id="inputWrappers">
+                <input type="text" placeholder="Kanji" id="kanjiInput" autocomplete="off">
+                <input type="text" placeholder="Reading" id="readingInput" autocomplete="off">
+                <input type="text" placeholder="Meaning" id="meaningInput" autocomplete="off">
+                </div>
+                <div id="guessWrapper">
+                <input type="submit" value="Guess" id="guess">
+                </div>
+                <div id="actionsWrapper">
+                <button id="hint">Hint?</button>
+                <button id="backTo">Back to modes</button>
+                <button id="reload">Skip</button>
+                </div>
+                <div id="resultWrapper">
+                    <p id="answer"></p>
+                </div>
+
+            </div>
+            <div id="canvasWrapper">
+                <canvas id="canvas">
+                </canvas>
+            </div>
+            <div id="hearts">
+            </div>
+            <div id="defeatPopup">
+                <h1>Boo! You suck!</h1>
+                <p>You lost. Try again? :)</p>
+                <button id="reset">Try Again</button>
+                <img src="media/skull.png" alt="small image of a skull" id="skull">
+            </div>
+            <div id="buyMenu">
+                <span id="x">X</span>
+                <p id="buyText">Buy a new creature with your hard-earned coin!The duck is 100 coins. More coming in the future maybe?</p> 
+                <img  id="cat" src="media/cat.png" alt="an ugly cat">
+                <img  id="duck" src="media/duck.png" alt="an ugly duck">
+            </div>
+
+
+        </main>
+        <footer>
+        </footer>
+    </div>
+</body>
+
+</html>

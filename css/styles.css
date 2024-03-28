@@ -1,0 +1,339 @@
+@charset "UTF-8";
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/*WRAPPER*/
+main {
+  flex: 1;
+  max-width: 1800px;
+  margin: 0 auto;
+  opacity: 0%;
+}
+
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/*GENERAL STYLES*/
+html {
+  font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+  color: rgb(218, 224, 218);
+  background-color: rgb(31, 31, 29);
+}
+
+header {
+  padding: 1rem;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin: 0.5rem;
+  padding: 1rem;
+}
+
+h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin: 0.5rem;
+}
+
+h3 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin: 0.3rem;
+}
+
+p {
+  margin: 0.8rem;
+  line-height: 1.4rem;
+  padding: 1rem;
+}
+
+ul {
+  list-style-image: url(../media/rightchevron.svg);
+  padding-inline-start: 1.2rem;
+  margin: 0.5rem;
+  line-height: 1.4rem;
+}
+
+#gameWrapper {
+  display: none;
+}
+
+#explanation {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#explanation p {
+  display: block;
+  max-width: 1000px;
+  text-align: center;
+}
+
+button {
+  background-color: rgb(105, 15, 111);
+  color: rgb(218, 224, 218);
+  border-radius: 2px;
+  border: none;
+  padding: 5px;
+  font-size: 18px;
+}
+button:hover {
+  background-color: rgb(171, 25, 181);
+}
+button:active {
+  background-color: rgb(33, 27, 33);
+}
+
+#buttonWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+input {
+  font-size: 20px;
+  margin: 10px;
+  background-color: rgb(22, 22, 21);
+  color: rgb(218, 224, 218);
+  border: none;
+  padding: 10px;
+  box-shadow: 1px 1px 5px rgb(45, 3, 36);
+  transition: ease-in-out 0.3s;
+}
+input:focus {
+  border: none;
+  outline: white 1px solid;
+  border-radius: 1px;
+}
+input:hover {
+  box-shadow: 3px 3px 10px rgb(86, 15, 71);
+  color: #ebd3ea;
+}
+input:active {
+  box-shadow: 5px 5px 13px rgb(255, 122, 226);
+}
+
+#guessWrapper {
+  text-align: center;
+}
+#guessWrapper #guess {
+  padding: 20px;
+  margin: 20px;
+}
+
+#actionsWrapper {
+  text-align: center;
+}
+#actionsWrapper button {
+  font-size: 18px;
+  margin: 5px;
+  background-color: rgb(22, 22, 21);
+  color: rgb(218, 224, 218);
+  border: none;
+  padding: 10px;
+  box-shadow: 1px 1px 5px rgb(45, 3, 36);
+  transition: ease-in-out 0.3s;
+}
+#actionsWrapper button:hover {
+  box-shadow: 3px 3px 10px rgb(86, 15, 71);
+  color: #ebd3ea;
+}
+#actionsWrapper button:active {
+  box-shadow: 5px 5px 13px rgb(255, 122, 226);
+}
+
+#buyMenu {
+  display: none;
+  background-color: rgb(22, 22, 21);
+  border: 5px solid rgb(218, 224, 218);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#buyMenu img {
+  width: 100px;
+  border: solid 1px rgb(218, 224, 218);
+  border-radius: 2px;
+}
+#buyMenu #x {
+  position: relative;
+  left: 580px;
+  top: 10px;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.loader {
+  border: 6px solid rgb(218, 224, 218); /* Light grey */
+  border-radius: 0%;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  position: absolute;
+  top: calc(50vh - 40px);
+  left: calc(50vw - 40px);
+  animation: spin 2s ease-in-out infinite;
+}
+.loader img {
+  width: 100%;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  5% {
+    transform: rotate(40deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+img {
+  width: 100%;
+  height: auto;
+}
+
+#canvasWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
+}
+
+#canvas {
+  border-radius: 2px;
+  width: 960px;
+  max-width: 90%;
+  height: 538px;
+  background-image: url(../media/backgroundimage1.gif);
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin: 0 auto;
+}
+
+.heart {
+  width: 50px;
+  height: auto;
+}
+
+#hearts {
+  display: grid;
+  grid-template-columns: repeat(5, 50px);
+  grid-auto-flow: row;
+  justify-content: center;
+}
+
+#money {
+  width: 50px;
+  cursor: pointer;
+}
+
+#duck {
+  cursor: pointer;
+}
+
+#indicatorsWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+#inputWrappers {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  margin: 0 auto;
+}
+
+#defeatPopup {
+  display: none;
+  color: black;
+  background-color: rgb(198, 54, 54);
+  z-index: 2;
+  align-items: center;
+  flex-direction: column;
+}
+#defeatPopup img {
+  width: 200px;
+}
+
+#scoresWrapper, #moneyWrapper {
+  border-radius: 5px;
+  font-size: 18px;
+  background-color: rgb(22, 22, 21);
+  padding: 10px;
+}
+
+/*MEDIA QUERIES*/
+@media (min-width: 500px) {
+  h1 {
+    font-size: 3rem;
+  }
+  #inputWrappers {
+    width: 400px;
+  }
+}
+@media (min-width: 1020px) {
+  #hearts {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  #inputWrappers {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+  }
+}/*# sourceMappingURL=styles.css.map */
