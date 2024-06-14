@@ -70,10 +70,6 @@ html {
   background-color: rgb(31, 31, 29);
 }
 
-header {
-  padding: 1rem;
-}
-
 h1 {
   text-align: center;
   font-size: 2.5rem;
@@ -165,16 +161,9 @@ input:active {
   box-shadow: 5px 5px 13px rgb(255, 122, 226);
 }
 
-#guessWrapper {
-  text-align: center;
-}
-#guessWrapper #guess {
-  padding: 20px;
-  margin: 20px;
-}
-
 #actionsWrapper {
   text-align: center;
+  margin-top: 12px;
 }
 #actionsWrapper button {
   font-size: 18px;
@@ -247,14 +236,32 @@ img {
   height: auto;
 }
 
+#feedbackWrapper {
+  display: none;
+  border: 1px solid rgb(105, 15, 111);
+  border-radius: 5px;
+  color: rgb(218, 224, 218);
+  padding: 5px;
+}
+#feedbackWrapper h3 {
+  font-size: 1.3rem;
+}
+
+#feedback {
+  font-size: 18px;
+  width: 300px;
+  padding: 5px;
+}
+
 #canvasWrapper {
   display: flex;
   justify-content: center;
-  margin-top: 100px;
+  margin-top: 20px;
 }
 
 #canvas {
   border-radius: 2px;
+  box-shadow: 1px 1px 5px rgb(45, 3, 36);
   width: 960px;
   max-width: 90%;
   height: 538px;
@@ -288,6 +295,7 @@ img {
 #indicatorsWrapper {
   display: flex;
   justify-content: space-between;
+  margin-top: 12px;
 }
 
 #inputWrappers {
@@ -309,20 +317,39 @@ img {
   width: 200px;
 }
 
+.errorEffect {
+  box-shadow: 1px 1px 5px rgb(186, 32, 32);
+}
+
+.correctEffect {
+  box-shadow: 5px 5px 13px rgb(255, 122, 226);
+}
+
 #scoresWrapper, #moneyWrapper {
-  border-radius: 5px;
-  font-size: 18px;
+  text-align: center;
+  font-size: 16px;
   background-color: rgb(22, 22, 21);
-  padding: 10px;
+  width: 120px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-family: arial;
+}
+
+#scoresWrapper span {
+  font-size: 18px;
 }
 
 /*MEDIA QUERIES*/
 @media (min-width: 500px) {
   h1 {
-    font-size: 3rem;
+    font-size: 2.5rem;
   }
   #inputWrappers {
     width: 400px;
+  }
+  #resultWrapper {
+    display: flex;
+    justify-content: space-between;
   }
 }
 @media (min-width: 1020px) {
@@ -335,5 +362,12 @@ img {
     display: flex;
     justify-content: center;
     flex-direction: row;
+  }
+}
+@media (min-width: 1500px) {
+  #feedbackWrapper {
+    position: absolute;
+    right: calc(50vw - 700px);
+    top: 150px;
   }
 }/*# sourceMappingURL=styles.css.map */

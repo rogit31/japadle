@@ -7,9 +7,9 @@ const reload = $('#reload');
 const kanjiModeButton = $('#kanjiModeButton');
 const kanaModeButton = $('#kanaModeButton');
 const meaningModeButton = $('#meaningModeButton');
-const kanjiDisplay = $('#kanji');
-const kanaDisplay = $('#kana');
-const meaningDisplay = $('#meaning');
+let kanjiDisplay = $('#kanji');
+let kanaDisplay = $('#kana');
+let meaningDisplay = $('#meaning');
 const kanjiInput = $('#kanjiInput');
 const readingInput = $('#readingInput');
 const meaningInput = $('#meaningInput');
@@ -35,6 +35,11 @@ let currentMoney = 0;
 let hintShown = false; 
 let moneyLoaded = false;
 let remainingHP = startingHP;
+let wordKanji = '';
+let wordKana = '';
+let wordTranslations ='';
+const feedback = $('#feedback');
+
 
 // Fetch and parse JSON data function
 function fetchWordData() {
@@ -68,11 +73,11 @@ function displayRandomWord() {
         const commonItem = items.find(item => item.common === true);
         return commonItem ? commonItem.text : `Common kanji/kana not found. This shouldn't happen.`;
     };
-    const wordKanji = findCommonText(randomWord.kanji);
-    const wordKana = findCommonText(randomWord.kana);
+    wordKanji = findCommonText(randomWord.kanji);
+    wordKana = findCommonText(randomWord.kana);
 
     //The translations are contained in a glossary index with sometimes several separate translations, so here I had to double map/join them to a single string. In the future I want the check for correct meanings to be more accepting, currently you have to match the definition exactly.  
-    const wordTranslations = randomWord.sense.map(s => s.gloss.map(g => g.text).join(', ')).join(', ');
+    wordTranslations = randomWord.sense.map(s => s.gloss.map(g => g.text).join(', ')).join(', ');
     kanjiDisplay.text(wordKanji);
     kanaDisplay.text(wordKana);
     meaningDisplay.text(wordTranslations);
@@ -84,6 +89,20 @@ function displayRandomWord() {
     kanjiInput.val('');
     meaningInput.val('');
     answer.text('');
+
+    //Remove error effect
+    removeError();
+    removeCorrect();
+    console.log(wordKanji, wordKana, wordTranslations);
+};
+
+//Remove error effect
+function removeError(){
+    $('.errorEffect').removeClass('errorEffect');
+}
+//Remove correct effect
+function removeCorrect(){
+    $('.correctEffect').removeClass('correctEffect');
 }
 
 //Invoke the fetch data function as the first function
@@ -92,10 +111,11 @@ fetchWordData();
 //Making a skip cost a hit point
 reload.on('click', skipHeart);
 function skipHeart() {
-    console.log(remainingHP);
+    showPreviousAnswer();
     if (remainingHP > 0) {
         $(`#heart-${remainingHP - 1}`).remove(); // Remove the last heart
         remainingHP--; // Decrease remainingHP
+        $('#livesLeft').text(remainingHP);
         displayRandomWord();
 
         if (gameModeEnabled === 'kanji') {
@@ -114,7 +134,32 @@ function skipHeart() {
         gameWrapper.css('display', 'none');
     }
 }
-
+//Feedback on previous answer
+function showPreviousAnswer() {
+    $('#feedbackWrapper').css('display', 'inline');
+    feedback.empty();
+    let textToShow = '';
+    if (gameModeEnabled == "kanji"){
+        textToShow = wordKana + ';  ' + wordTranslations;
+    }
+    else if(gameModeEnabled == "kana"){
+        textToShow = wordKanji + ';  ' + wordTranslations;
+    }
+    else{
+        textToShow = wordKanji + ';  '+  wordKana;
+    }
+    const maxLength = 100;
+    if (textToShow.length > maxLength){
+        const nextComma = textToShow.indexOf(',', maxLength);
+        if (nextComma !== -1){
+            textToShow = textToShow.substring(0, nextComma) + '...';
+        }
+        else {
+            textToShow = textToShow.substring(0, maxLength) + '...';
+        }
+    }
+feedback.append(textToShow);
+}
 //Introduction clear
 gameModeButtons.on('click', function () {
     gameWrapper.css('display', 'block');
@@ -129,6 +174,7 @@ function initialize() {
         heartDisplay.append(`<img id="heart-${i}" class="heart" src="media/heart.png" alt="small heart">`);
     };
     score.text('0');
+    $('#livesLeft').text('10');
     let initialHighScore = getHighScore();
     highScore.text(initialHighScore);
     loadMoney();
@@ -185,46 +231,66 @@ function showHint() {
         default:
             answer.append('How did you even get here?');
     }
-}
-
+};
 //Differing functions for hints based on game mode, here kanji
 function displayKanjiHint(randomNumber) {
     if (!correctReading && !correctMeaning) {
-        displayRandomHint(randomNumber, kanaDisplay, meaningDisplay);
+        displayRandomHint(randomNumber, wordTranslations, wordKana);
     } else if (correctReading && !correctMeaning) {
-        meaningDisplay.css('display', 'inline');
+        meaningInput.val(wordTranslations);
     } else if (!correctReading && correctMeaning) {
-        kanaDisplay.css('display', 'inline');
+        readingInput.val(wordKana);
     }
-}
+};
 //Here reading/kana
 function displayKanaHint(randomNumber) {
     if (!correctKanji && !correctMeaning) {
-        displayRandomHint(randomNumber, kanjiDisplay, meaningDisplay);
+        displayRandomKanaHint(randomNumber, wordTranslations, wordKanji);
     } else if (correctKanji && !correctMeaning) {
-        meaningDisplay.css('display', 'inline');
+        meaningInput.val(wordTranslations);
     } else if (!correctKanji && correctMeaning) {
-        kanjiDisplay.css('display', 'inline');
+        readingInput.val(wordKanji);
     }
-}
+};
+
 //Here meaning
 function displayMeaningHint(randomNumber) {
     if (!correctKanji && !correctReading) {
-        displayRandomHint(randomNumber, kanjiDisplay, kanaDisplay);
+        displayRandomMeaningHint(randomNumber, wordKanji, wordKana);
     } else if (!correctKanji && correctReading) {
-        kanjiDisplay.css('display', 'inline');
+        kanjiInput.val(wordKanji)
     } else if (correctKanji && !correctReading) {
-        kanaDisplay.css('display', 'inline');
+       readingInput.val(wordKana)
     }
 }
 //Random select hint
-function displayRandomHint(randomNumber, display1, display2) {
+function displayRandomHint(randomNumber, hint1, hint2) {
     if (randomNumber < 0.5) {
-        display1.css('display', 'inline');
+        meaningInput.val(hint1);
+        readingInput.val('');
     } else {
-        display2.css('display', 'inline');
+        meaningInput.val('');
+        readingInput.val(hint2);
     }
-}
+};
+function displayRandomKanaHint(randomNumber, hint1, hint2) {
+    if (randomNumber < 0.5) {
+        meaningInput.val(hint1);
+        kanjiInput.val('');
+    } else {
+        meaningInput.val('');
+        kanjiInput.val(hint2);
+    }
+};
+function displayRandomMeaningHint(randomNumber, hint1, hint2) {
+    if (randomNumber < 0.5) {
+        kanjiInput.val(hint1);
+        readingInput.val('');
+    } else {
+        kanjiInput.val('');
+        readingInput.val(hint2);
+    }
+};
 
 //Originally, I was planning on having a few more possible upgrades but this also ended up being quite challenging. With the time I had, this is what I managed to implement.
 //Function to earn money when correct
@@ -311,7 +377,7 @@ function checkInputs() {
         checkKana(guessedKana);
     }
     //Flag for completion is switched if at least two inputs are right
-    if (correctReading && correctMeaning || correctReading && correctKanji || correctKanji && correctReading) {
+    if (correctReading && correctMeaning || correctKanji && correctMeaning || correctKanji && correctReading) {
         complete = true;
     }
     //invoke completion function
@@ -319,24 +385,27 @@ function checkInputs() {
 }
 //functions for checking based on game mode
 function checkKana(guessedKana) {
-    if (guessedKana === kanaDisplay.text()) {
-        answer.append('Reading is correct!');
+    if (guessedKana.trim() === kanaDisplay.text()) {
+        readingInput.addClass('correctEffect');
+        removeError();
         correctReading = true;
     } else {
-        answer.append('Reading is incorrect!');
-        correctReading = false;
+        readingInput.addClass('errorEffect');
+        correctReading = false; 
     }
 }
 //functions for checking based on game mode
 function checkKanji(guessedKanji) {
-    if (guessedKanji === kanjiDisplay.text()) {
-        answer.append("That's the right kanji!<br>");
+    if (guessedKanji.trim() === kanjiDisplay.text()) {
+        kanjiInput.addClass('correctEffect');
+        removeError();
         correctKanji = true;
     } else {
-        answer.append("That's the wrong kanji!<br>");
+        kanjiInput.addClass('errorEffect');
         correctKanji = false;
     }
 }
+
 //functions for checking based on game mode. This one is perhaps the most complicated and I am still unsatisfied with it. The translations for words are contained in different arrays depending on the number of possible definitions. To check if the input is correct, this means that I have to check against all definitions. I decided to map all definitions into one string delimited by commas. Then, I take the users input, lowercase it, split it in the same fashion and then check if any of the words are contained within the definition excluding common words. I am not satisfied with it because know all you need is *one* of the words to get the full definition right. But then again, some of the definitions in the dictionary are ridiculously long and are impossible to get accurately even if you understand the word perfectly. Maybe the solution is to implement value of % of words guessed? Like if one of the definitions is three words long and you had two words correct it flags as correct? Unsure. 
 function checkMeaning(guessedMeaning) {
     const meanings = meaningDisplay.text().split(',').map(m => m.trim()).flatMap(m => m.split(/\s+/)).filter(Boolean);
@@ -345,20 +414,25 @@ function checkMeaning(guessedMeaning) {
     const commonWords = ['of', 'the', 'and', 'to', 'in', 'is', 'it', 'that', 'on', 'was', 'for', 'with', 'as', 'be', 'at', 'by', 'i', 'you', 'are', 'this', 'or', 'but', 'not', 'an', 'they', 'do', 'from', 'we', 'can', 'will', 'if', 'there', 'any', 'he', 'she', 'so', 'has', 'been', 'what', 'when', 'who', 'which', 'how', 'where', 'why', 'whom', 'whose', 'our', 'your', 'my', 'his', 'her', 'their', 'its'];
 
     // Convert guessedMeaning to lowercase and split into words
-    const guessedWords = guessedMeaning.toLowerCase().split(/\s+/);
+    const guessedWords = guessedMeaning.toLowerCase().trim().split(/\s+/);
 
     // Filter out common words from meanings
     const filteredMeanings = meanings.filter(word => !commonWords.includes(word));
 
     // Check if any of the guessed words are in the filtered meanings array
     if (guessedWords.some(word => filteredMeanings.includes(word))) {
-        answer.append('Meaning is correct!<br>');
+        meaningInput.addClass('correctEffect');
+        removeError();
         correctMeaning = true;
     } else {
-        answer.append('Meaning is incorrect!<br>');
+        meaningInput.addClass('errorEffect');
         correctMeaning = false;
     }
 }
+//TO DO: STOP MAKING IT SO THAT WHITESPACE WILL FLAG THE ANSWER AS FALSE!!!
+// FIX THE UI GODDAYUMN IT LOOKS LIKE SHIT 
+// MAYBE GET SOMEONE TO PLAY TEST IT 
+//CHANGE TITLE 
 
 //functions for what to do when the complete flag is true
 function checkForCompletion() {
@@ -370,45 +444,41 @@ function checkForCompletion() {
         //iterate counters and update(i really should've just called this score)
         guessedCorrectlyCounter++;
         score.text(guessedCorrectlyCounter);
-        //clear inputs
-        answer.text('');
-        readingInput.val('');
-        kanjiInput.val('');
-        meaningInput.val('');
+        showPreviousAnswer();
+        
+        //Small timeout to confirm to the player that they got the answer right
+        setTimeout(function(){
 
-        //update high score if current counter is bigger
-        if (guessedCorrectlyCounter > currentHighScore) {
-            saveHighScore(guessedCorrectlyCounter);
-            highScore.text(guessedCorrectlyCounter);
-        } else {
-            highScore.text(currentHighScore);
-        }
+            //clear inputs
+            answer.text('');
+            readingInput.val('');
+            kanjiInput.val('');
+            meaningInput.val('');
+    
+            //update high score if current counter is bigger
+            if (guessedCorrectlyCounter > currentHighScore) {
+                saveHighScore(guessedCorrectlyCounter);
+                highScore.text(guessedCorrectlyCounter);
+            } else {
+                highScore.text(currentHighScore);
+            }
+    
+            //earn money, save it, and update the display
+            earnMoney();
+            saveMoney(currentMoney);
+            money.text(currentMoney);
+    
+            //display a new word
+            displayRandomWord();
+    
+            //reset flags
+            complete = false;
+            correctKanji = false;
+            correctReading = false;
+            correctMeaning = false;
+            hintShown = false;
+        }, 800)
 
-        //earn money, save it, and update the display
-        earnMoney();
-        saveMoney(currentMoney);
-        money.text(currentMoney);
-
-        //display a new word
-        displayRandomWord();
-
-        //reset flags
-        complete = false;
-        correctKanji = false;
-        correctReading = false;
-        correctMeaning = false;
-        hintShown = false;
-
-        //reset the display so if any hints were used they don't persist onto the next word
-        if (gameModeEnabled = 'kanji'){
-            kanjiMode();
-        }
-        else if(gameModeEnabled = 'kana'){
-            kanaMode();
-        }
-        else {
-            meaningMode();
-        }
     }
 }
 //Reset all displays to original so that when switching game modes the display nones don't bleed into other game modes

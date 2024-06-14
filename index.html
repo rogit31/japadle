@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title> COMP-2132 - Final Project - Igor Tasic</title>
+    <title> Japadle - Japanese learning mini-game</title>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0, width=device-width">
     <link rel="stylesheet" href="css/styles.css">
@@ -17,8 +17,6 @@
 
 <body>
     <div id="wrapper">
-        <header>
-        </header>
         <div class="loader"><img src="media/blossom.png" alt=""></div>
         <main>
             <div id="explanation">
@@ -29,7 +27,9 @@
                     use to give you a hint, but keep in mind you can only have one hint per question. Your high score
                     and coins will stay in your browser's cache and are shared across game modes.</p>
 
-                <p>You can also use your hard-earned coins to buy some slightly faster creatures if you wish. I will add more in the future and make the selected creature persist in memory as well eventually. For those of you who wish to cheat, the word generated is logged onto the console :).</p>
+                <p>You can also use your hard-earned coins to buy some slightly faster creatures if you wish. I will add
+                    more in the future and make the selected creature persist in memory as well eventually. For those of
+                    you who wish to cheat, the word generated is logged onto the console :).</p>
                 <h3>Choose your mode below!</h3>
                 <div id="buttonWrapper">
                     <button id="kanjiModeButton" class="gameModeButtons">From Kanji</button>
@@ -39,35 +39,40 @@
             </div>
 
             <div id="gameWrapper">
-                <div id="indicatorsWrapper">
-                    <div id="scoresWrapper">
-                        <span>Score:<span id="score"></span></span><br>
-                        <span>High score:<span id="highScore"></span></span>
+                <div id="interactionWrapper">
+                    <div id="indicatorsWrapper">
+                        <div id="scoresWrapper">
+                            <span>Score:<span id="score"></span></span><br>
+                            <span>High score:<span id="highScore"></span></span>
+                            <span>Lives: <span id="livesLeft"></span></span>
+                        </div>
+                        <span id="moneyWrapper"><div id="moneyDisplay"></div><img id="money" src="media/money.png"
+                                alt="small coin"></span>
                     </div>
-                    <span id="moneyWrapper"><span id="moneyDisplay"></span><img id="money" src="media/money.png"
-                            alt="small coin"></span>
-                </div>
-                <div id="outputWrapper">
-                    <h1 id="kanji"></h1>
-                    <h1 id="kana"></h1>
-                    <h1 id="meaning"></h1>
-                </div>
+                    <div id="outputWrapper">
+                        <h1 id="kanji"></h1>
+                        <h1 id="kana"></h1>
+                        <h1 id="meaning"></h1>
+                    </div>
 
-                <div id="inputWrappers">
-                <input type="text" placeholder="Kanji" id="kanjiInput" autocomplete="off">
-                <input type="text" placeholder="Reading" id="readingInput" autocomplete="off">
-                <input type="text" placeholder="Meaning" id="meaningInput" autocomplete="off">
-                </div>
-                <div id="guessWrapper">
-                <input type="submit" value="Guess" id="guess">
-                </div>
-                <div id="actionsWrapper">
-                <button id="hint">Hint?</button>
-                <button id="backTo">Back to modes</button>
-                <button id="reload">Skip</button>
+                    <div id="inputWrappers">
+                        <input type="text" placeholder="Kanji" id="kanjiInput" autocomplete="off">
+                        <input type="text" placeholder="Reading" id="readingInput" autocomplete="off">
+                        <input type="text" placeholder="Meaning" id="meaningInput" autocomplete="off">
+                        <input type="submit" value="Guess" id="guess">
+                    </div>
+                    <div id="actionsWrapper">
+                        <button id="hint">Hint?</button>
+                        <button id="backTo">Back to modes</button>
+                        <button id="reload">Skip</button>
+                    </div>
                 </div>
                 <div id="resultWrapper">
                     <p id="answer"></p>
+                    <div id="feedbackWrapper">
+                        <h3>Previous:</h3>
+                        <div id="feedback"> </div>
+                    </div>
                 </div>
 
             </div>
@@ -85,9 +90,10 @@
             </div>
             <div id="buyMenu">
                 <span id="x">X</span>
-                <p id="buyText">Buy a new creature with your hard-earned coin!The duck is 100 coins. More coming in the future maybe?</p> 
-                <img  id="cat" src="media/cat.png" alt="an ugly cat">
-                <img  id="duck" src="media/duck.png" alt="an ugly duck">
+                <p id="buyText">Buy a new creature with your hard-earned coin!The duck is 100 coins. More coming in the
+                    future maybe?</p>
+                <img id="cat" src="media/cat.png" alt="an ugly cat">
+                <img id="duck" src="media/duck.png" alt="an ugly duck">
             </div>
 
 
